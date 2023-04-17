@@ -3,8 +3,8 @@
 
 #include <array>
 #include <cassert>
-#include <cmath>
 #include <cfloat>
+#include <cmath>
 #include <cstddef>
 #include <ostream>
 
@@ -15,7 +15,7 @@ template <std::size_t N, std::size_t M>
 struct mat {
  public:
   mat() = default;
-  mat(const mat<N, M>&) = default;
+  mat(const mat<N, M> &) = default;
 
   static mat<N, M> identity() {
     assert(N == M);
@@ -91,7 +91,7 @@ template <std::size_t N>
 struct vec {
  public:
   vec() = default;
-  vec(const vec<N>&) = default;
+  vec(const vec<N> &) = default;
 
   auto &operator[](const std::size_t i) {
     assert(i < N);
@@ -142,11 +142,8 @@ struct vec {
 };
 
 vec<3> cross(const vec<3> &v1, const vec<3> &v2) {
-  return {
-    (v1[1] * v2[2]) - (v1[2] * v2[1]),
-    (v1[2] * v2[0]) - (v1[0] * v2[2]),
-    (v1[0] * v2[1]) - (v1[1] * v2[0])
-  };
+  return {(v1[1] * v2[2]) - (v1[2] * v2[1]), (v1[2] * v2[0]) - (v1[0] * v2[2]),
+          (v1[0] * v2[1]) - (v1[1] * v2[0])};
 }
 
 template <std::size_t N>
@@ -164,7 +161,8 @@ vec<N> normalize(const vec<N> &v) {
   return w;
 }
 
-mat<4, 4> perspective(float fov, float aspect, float near, float far) {
+mat<4, 4> perspective(const float fov, const float aspect, const float near,
+                      const float far) {
   const float t = std::tan(fov / 2.0f);
   mat<4, 4> m{};
   m[0][0] = 1.0f / (aspect * t);

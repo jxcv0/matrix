@@ -143,5 +143,3 @@ TEST(matrix_tests, rotate) {
   ASSERT_FLOAT_EQ(r[3][2], 0.0f);
   ASSERT_FLOAT_EQ(r[3][3], 1.0f);
 }
-
-
