@@ -15,6 +15,7 @@ template <std::size_t N, std::size_t M>
 struct mat {
  public:
   mat() = default;
+  mat(const mat<N, M>&) = default;
 
   static mat<N, M> identity() {
     assert(N == M);
@@ -90,6 +91,7 @@ template <std::size_t N>
 struct vec {
  public:
   vec() = default;
+  vec(const vec<N>&) = default;
 
   auto &operator[](const std::size_t i) {
     assert(i < N);
@@ -139,13 +141,31 @@ struct vec {
   std::array<float, N> m_elem;
 };
 
+vec<3> cross(const vec<3> &v1, const vec<3> &v2) {
+  return {
+    (v1[1] * v2[2]) - (v1[2] * v2[1]),
+    (v1[2] * v2[0]) - (v1[0] * v2[2]),
+    (v1[0] * v2[1]) - (v1[1] * v2[0])
+  };
+}
+
 template <std::size_t N>
 vec<N> normalize(const vec<N> &v) {
+  float l = 0;
+  for (std::size_t n = 0; n < N; n++) {
+    l += (v[n] * v[n]);
+  }
+  l = std::sqrt(l);
+
+  vec<N> w = v;
+  w[0] /= l;
+  w[1] /= l;
+  w[2] /= l;
+  return w;
 }
 
 mat<4, 4> perspective(float fov, float aspect, float near, float far) {
   const float t = std::tan(fov / 2.0f);
-
   mat<4, 4> m{};
   m[0][0] = 1.0f / (aspect * t);
   m[1][1] = 1.0f / t;
@@ -156,11 +176,68 @@ mat<4, 4> perspective(float fov, float aspect, float near, float far) {
 }
 
 mat<4, 4> look_at(const vec<3> &eye, const vec<3> &ctr, const vec<3> &up) {
+  vec<3> f{ctr[0] - eye[0], ctr[1] - eye[1], ctr[2] - eye[2]};
+  f = normalize(f);
 
+  auto s = normalize(cross(f, up));
+  auto u = cross(s, f);
+
+  auto m = mat<4, 4>::identity();
+
+  m[0][0] = s[0];
+  m[1][0] = s[1];
+  m[2][0] = s[2];
+
+  m[0][1] = u[0];
+  m[1][1] = u[1];
+  m[2][1] = u[2];
+
+  m[0][2] = -f[0];
+  m[1][2] = -f[1];
+  m[2][2] = -f[2];
+
+  m[3][0] = -(s * eye);
+  m[3][1] = -(u * eye);
+  m[3][2] = f * eye;
+  return m;
 }
 
-mat<4, 4> translate(const mat<4, 4> &m, const vec<3> &v);
+mat<4, 4> translate(const mat<4, 4> &m, const vec<3> &v) {
+  mat<4, 4> res = m;
+  res[3][0] += v[0];
+  res[3][1] += v[1];
+  res[3][2] += v[2];
+  return res;
+}
 
-mat<4, 4> rotate(const mat<4, 4> &m, const vec<3> &axis, const float angle);
+mat<4, 4> rotate(const mat<4, 4> &m, const vec<3> &axis, const float angle) {
+  const float c = std::cos(angle);
+  const float s = std::sin(angle);
+
+  auto a = normalize(axis);
+
+  mat<4, 4> rot{};
+  rot[0][0] = c + (1.0f - c) * a[0] * a[0];
+  rot[0][1] = (1.0f - c) * a[0] * a[1] + s * a[2];
+  rot[0][2] = (1.0f - c) * a[0] * a[2] - s * a[1];
+  rot[0][3] = 0.0f;
+
+  rot[1][0] = (1.0f - c) * a[1] * a[0] - s * a[2];
+  rot[1][1] = c + (1.0f - c) * a[1] * a[1];
+  rot[1][2] = (1.0f - c) * a[1] * a[2] + s * a[0];
+  rot[1][3] = 0.0f;
+
+  rot[2][0] = (1.0f - c) * a[2] * a[0] + s * a[1];
+  rot[2][1] = (1.0f - c) * a[2] * a[1] - s * a[0];
+  rot[2][2] = c + (1.0f - c) * a[2] * a[2];
+  rot[2][3] = 0.0f;
+
+  rot[3][0] = 0.0f;
+  rot[3][1] = 0.0f;
+  rot[3][2] = 0.0f;
+  rot[3][3] = 1.0f;
+
+  return m * rot;
+}
 
 #endif  // MATRIX_H_
