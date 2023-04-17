@@ -25,7 +25,6 @@ TEST(matrix_tests, product) {
   mat<2, 3> b{1, 2, 3, 4, 5, 6};
   auto c = a * b;
   mat<3, 3> r{9, 12, 15, 19, 26, 33, 29, 40, 51};
-
   ASSERT_TRUE(c == r);
 }
 
@@ -33,7 +32,6 @@ TEST(matrix_tests, identity) {
   mat<3, 3> i{IDENTITY_MAT3};
   mat<3, 2> a{1, 2, 3, 4, 5, 6};
   auto b = i * a;
-
   ASSERT_TRUE(b == a);
 }
 

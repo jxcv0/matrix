@@ -119,11 +119,11 @@ struct vec {
 
   friend bool operator!=(const vec<N> &v1, const vec<N> &v2) {
     for (std::size_t n = 0; n < N; n++) {
-      if (feq(v1[n], v2[n])) {
-        return false;
+      if (!feq(v1[n], v2[n])) {
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   friend std::ostream &operator<<(std::ostream &os, const vec<N> &v) {
