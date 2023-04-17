@@ -8,21 +8,22 @@
 #include <cstddef>
 #include <ostream>
 
-#define IDENTITY_MAT4 1, 0, 0, 0, \
-                      0, 1, 0, 0, \
-                      0, 0, 1, 0, \
-                      0, 0, 0, 1  \
-
-#define IDENTITY_MAT3 1, 0, 0, \
-                      0, 1, 0, \
-                      0, 0, 1  \
-
 bool feq(float a, float b) { return fabs(a - b) < FLT_EPSILON; }
+float radians(const float degrees) { return degrees * (M_PI / 180.0f); }
 
 template <std::size_t N, std::size_t M>
 struct mat {
  public:
   mat() = default;
+
+  static mat<N, M> identity() {
+    assert(N == M);
+    mat<N, N> m{};
+    for (std::size_t n = 0; n < N; n++) {
+      m[n][n] = 1;
+    }
+    return m;
+  }
 
   auto &operator[](const std::size_t i) {
     assert(i < N);
@@ -137,5 +138,29 @@ struct vec {
 
   std::array<float, N> m_elem;
 };
+
+template <std::size_t N>
+vec<N> normalize(const vec<N> &v) {
+}
+
+mat<4, 4> perspective(float fov, float aspect, float near, float far) {
+  const float t = std::tan(fov / 2.0f);
+
+  mat<4, 4> m{};
+  m[0][0] = 1.0f / (aspect * t);
+  m[1][1] = 1.0f / t;
+  m[2][2] = -(far + near) / (far - near);
+  m[2][3] = -1.0f;
+  m[3][2] = -(2.0f * far * near) / (far - near);
+  return m;
+}
+
+mat<4, 4> look_at(const vec<3> &eye, const vec<3> &ctr, const vec<3> &up) {
+
+}
+
+mat<4, 4> translate(const mat<4, 4> &m, const vec<3> &v);
+
+mat<4, 4> rotate(const mat<4, 4> &m, const vec<3> &axis, const float angle);
 
 #endif  // MATRIX_H_

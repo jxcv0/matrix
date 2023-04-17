@@ -29,7 +29,7 @@ TEST(matrix_tests, product) {
 }
 
 TEST(matrix_tests, identity) {
-  mat<3, 3> i{IDENTITY_MAT3};
+  auto i = mat<3, 3>::identity();
   mat<3, 2> a{1, 2, 3, 4, 5, 6};
   auto b = i * a;
   ASSERT_TRUE(b == a);
@@ -41,3 +41,28 @@ TEST(vector_tests, product) {
   auto c = a * b;
   ASSERT_FLOAT_EQ(c, 10);
 }
+
+TEST(vector_tests, perspective) {
+  auto m = perspective(radians(45.0f), (800.0f / 600.0f), 0.1f, 100.0f);
+
+  ASSERT_FLOAT_EQ(m[0][0], 1.81066f);
+  ASSERT_FLOAT_EQ(m[0][1], 0.0f);
+  ASSERT_FLOAT_EQ(m[0][2], 0.0f);
+  ASSERT_FLOAT_EQ(m[0][3], 0.0f);
+
+  ASSERT_FLOAT_EQ(m[1][0], 0.0f);
+  ASSERT_FLOAT_EQ(m[1][1], 2.4142134f);
+  ASSERT_FLOAT_EQ(m[1][2], 0.0f);
+  ASSERT_FLOAT_EQ(m[1][3], 0.0f);
+
+  ASSERT_FLOAT_EQ(m[2][0], 0.0f);
+  ASSERT_FLOAT_EQ(m[2][1], 0.0f);
+  ASSERT_FLOAT_EQ(m[2][2], -1.002002f);
+  ASSERT_FLOAT_EQ(m[2][3], -1.0f);
+
+  ASSERT_FLOAT_EQ(m[3][0], 0.0f);
+  ASSERT_FLOAT_EQ(m[3][1], 0.0f);
+  ASSERT_FLOAT_EQ(m[3][2], -0.2002002f);
+  ASSERT_FLOAT_EQ(m[3][3], 0.0f);
+}
+
