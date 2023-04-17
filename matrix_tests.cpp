@@ -29,6 +29,14 @@ TEST(matrix_tests, product) {
   ASSERT_TRUE(c == r);
 }
 
+TEST(matrix_tests, identity) {
+  mat<3, 3> i{IDENTITY_MAT3};
+  mat<3, 2> a{1, 2, 3, 4, 5, 6};
+  auto b = i * a;
+
+  ASSERT_TRUE(b == a);
+}
+
 TEST(vector_tests, product) {
   vec<3> a{1, 2, 3};
   vec<3> b{3, 2, 1};

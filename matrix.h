@@ -8,6 +8,15 @@
 #include <cstddef>
 #include <ostream>
 
+#define IDENTITY_MAT4 1, 0, 0, 0, \
+                      0, 1, 0, 0, \
+                      0, 0, 1, 0, \
+                      0, 0, 0, 1  \
+
+#define IDENTITY_MAT3 1, 0, 0, \
+                      0, 1, 0, \
+                      0, 0, 1  \
+
 bool feq(float a, float b) { return fabs(a - b) < FLT_EPSILON; }
 
 template <std::size_t N, std::size_t M>
