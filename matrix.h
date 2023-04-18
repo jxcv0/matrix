@@ -18,7 +18,7 @@ struct mat {
   mat(const mat<N, M> &) = default;
 
   static mat<N, M> identity() {
-    assert(N == M);
+    static_assert(N == M);
     mat<N, N> m{};
     for (std::size_t n = 0; n < N; n++) {
       m[n][n] = 1;
