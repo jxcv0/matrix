@@ -111,6 +111,14 @@ struct vec {
     return result;
   }
 
+  friend vec<3> operator*(const vec<N> &v1, const float f) {
+    vec<3> result = v1;
+    for (std::size_t n = 0; n < N; n++) {
+      result[n] *= f;
+    }
+    return result;
+  }
+
   friend vec<N> operator+(const vec<N> &v1, const vec<N> &v2) {
     vec<N> result;
     for (std::size_t n = 0; n < N; n++) {
