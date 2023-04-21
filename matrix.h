@@ -119,6 +119,14 @@ struct vec {
     return result;
   }
 
+  friend vec<N> operator-(const vec<N> &v1, const vec<N> &v2) {
+    vec<N> result;
+    for (std::size_t n = 0; n < N; n++) {
+      result[n] = v1[n] - v2[n];
+    }
+    return result;
+  }
+
   friend bool operator==(const vec<N> &v1, const vec<N> &v2) {
     for (std::size_t n = 0; n < N; n++) {
       if (!feq(v1[n], v2[n])) {
