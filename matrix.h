@@ -84,7 +84,7 @@ struct mat {
     return os;
   }
 
-  std::array<std::array<float, M>, N> m_elem;
+  float m_elem[N][M];
 };
 
 template <std::size_t N>
@@ -162,7 +162,7 @@ struct vec {
     return os;
   }
 
-  std::array<float, N> m_elem;
+  float m_elem[N];
 };
 
 vec<3> cross(const vec<3> &v1, const vec<3> &v2) {
